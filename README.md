@@ -1,3 +1,3 @@
 # Beautify Code Snippets
 
-Enter your code snippets, and show them off beautifully!
+Enter your code, and download them as snippets to show them off beautifully!
