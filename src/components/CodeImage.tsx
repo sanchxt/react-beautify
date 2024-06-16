@@ -19,7 +19,7 @@ type CodeProps = {
 const CodeImage = ({ code }: CodeProps) => {
   const { setDisplay } = useDisplay();
   const { color, setColor } = useColor();
-  const [fileName, setFileName] = useState("MyReact.jsx");
+  const [fileName, setFileName] = useState("BeautifyCode.jsx");
 
   const downloadImage = () => {
     const node = document.getElementById("code-container");
