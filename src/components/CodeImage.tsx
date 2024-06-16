@@ -1,15 +1,16 @@
-import { Download, X } from "lucide-react";
 import { useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import download from "downloadjs";
+import { Download, X } from "lucide-react";
+import * as htmlToImage from "html-to-image";
 import {
-  solarizedlight,
   atomDark,
-  vs,
   vscDarkPlus,
+  nightOwl,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
-import Dots from "./Dots";
-import { useDisplay } from "../store/DisplayContext";
+import { GreenDot, BlueDot, PinkDot } from "./Dots";
+import { useColor, useDisplay } from "../store/DisplayContext";
 
 type CodeProps = {
   code: any;
@@ -17,14 +18,32 @@ type CodeProps = {
 
 const CodeImage = ({ code }: CodeProps) => {
   const { setDisplay } = useDisplay();
+  const { color, setColor } = useColor();
   const [fileName, setFileName] = useState("MyReact.jsx");
+
+  const downloadImage = () => {
+    const node = document.getElementById("code-container");
+    if (node) {
+      htmlToImage
+        .toPng(node)
+        .then((dataUrl) => {
+          download(dataUrl, "code-snippet.png");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const syntaxHighlighterStyle =
+    color === "red" ? nightOwl : color === "yellow" ? vscDarkPlus : atomDark;
 
   return (
     <>
       <div className="absolute top-8 w-full flex flex-col gap-8 justify-center items-center text-4xl">
         {/* buttons */}
         <div className="flex w-full justify-end gap-8 md:gap-10 lg:gap-12 pr-8">
-          <div>
+          <div className="cursor-pointer" onClick={downloadImage}>
             <Download color="#fff" size={28} />
           </div>
           <div className="cursor-pointer">
@@ -32,7 +51,10 @@ const CodeImage = ({ code }: CodeProps) => {
           </div>
         </div>
 
-        <div className="w-full px-2 md:px-8 lg:px-[15rem] h-[85vh] relative">
+        <div
+          id="code-container"
+          className="w-full px-2 md:px-8 lg:px-[15rem] h-[85vh] relative"
+        >
           <div className="w-full h-full flex rounded-xl jshine z-[10]">
             <div className="m-[3px] p-1 md:pt-2 bg-gray-950 w-full rounded-xl relative overflow-hidden">
               {/* main box */}
@@ -42,12 +64,35 @@ const CodeImage = ({ code }: CodeProps) => {
                   {/* add overflow-hidden in the below line */}
                   <div className="ml-2 md:ml-3 lg:ml-4 text-sm h-full flex gap-4 md:gap-16 lg:gap-20 items-center">
                     {/* 3 dots */}
-                    <div className="mt-2">
+                    <div className="mt-2 flex gap-1 md:gap-2">
                       {window.innerWidth <= 768 && (
-                        <Dots width={18} height={18} />
+                        <>
+                          <div
+                            onClick={() => setColor("red")}
+                            className="cursor-pointer"
+                          >
+                            <GreenDot width={18} height={18} />
+                          </div>
+                          <div onClick={() => setColor("yellow")}>
+                            <PinkDot width={18} height={18} />
+                          </div>
+                          <div onClick={() => setColor("green")}>
+                            <BlueDot width={18} height={18} />
+                          </div>
+                        </>
                       )}
                       {window.innerWidth > 768 && (
-                        <Dots width={22} height={22} />
+                        <>
+                          <div onClick={() => setColor("red")}>
+                            <GreenDot width={22} height={22} />
+                          </div>
+                          <div onClick={() => setColor("yellow")}>
+                            <PinkDot width={22} height={22} />
+                          </div>
+                          <div onClick={() => setColor("green")}>
+                            <BlueDot width={22} height={22} />
+                          </div>
+                        </>
                       )}
                     </div>
 
@@ -75,7 +120,7 @@ const CodeImage = ({ code }: CodeProps) => {
                         padding: 0,
                         fontFamily: "cursive",
                       }}
-                      style={atomDark}
+                      style={syntaxHighlighterStyle}
                       showLineNumbers
                     >
                       {code}
