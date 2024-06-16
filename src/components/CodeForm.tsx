@@ -10,7 +10,7 @@ const CodeForm = () => {
   const [code, setCode] = useState("");
 
   const beautifyCode = () => {
-    if (code !== "") {
+    if (code.trim() !== "") {
       setDisplay(true);
     } else {
       toast.error("Code cannot be empty!", {

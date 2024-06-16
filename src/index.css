@@ -33,10 +33,12 @@
   );
 }
 
+/* border gradient */
 .jshine {
   background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9);
 }
 
+/* background rotating animation */
 .ball {
   background: linear-gradient(259.53deg, #0a3fff 6.53%, #f55f0a 95.34%);
   filter: blur(10vw);
